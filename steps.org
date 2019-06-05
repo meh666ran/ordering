@@ -1,0 +1,5 @@
+- make auth
+- make migration for create admins table
+- edit admin migration file
+- migrate
+
