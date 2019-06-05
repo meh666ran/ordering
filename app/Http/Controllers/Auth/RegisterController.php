@@ -22,6 +22,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
+    public $successStatus = 200;
 
     /**
      * Where to redirect users after registration.
@@ -63,10 +64,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+      $data['password'] = Hash::make($data['password']);
+      $user = User::create($data);
+      $success['token'] = $user->createToken('ordering')->accessToken;
+      $success['name'] = $user->name;
+      return response()->json(['success' => $success], $this->successStatus);
+      /*
+        $user = User::create([
             'name' => $data['name'],
             'phone_number' => $data['phone_number'],
             'password' => Hash::make($data['password']),
+            'address' => $data['address'],
         ]);
+        */
     }
 }

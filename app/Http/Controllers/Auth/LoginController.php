@@ -21,7 +21,7 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Get the login username to be used by the controller.
+     * Get the login phone_number to be used by the controller.
      *
      * @return string
      */
@@ -29,13 +29,13 @@ class LoginController extends Controller
     {
         return 'phone_number';
     }
-    
+
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    //protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
