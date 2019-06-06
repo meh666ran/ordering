@@ -12,7 +12,7 @@ class UserLoginController extends Controller
     public $successStatus = 200;
 
     public function __construct() {
-      $this->middleware('guest');
+      $this->middleware('guest:user');
     }
 
     public function login(Request $request) {
@@ -34,13 +34,18 @@ class UserLoginController extends Controller
 
       if (Auth::attempt($credentials)) {
         $user = Auth::user();
-        $success = $user->createToken('ordering')->accessToken;
+        $success = $user->createToken('ordering-user-token')->accessToken;
         return response()->json(['success' => 'true', 'token' => $success], $this->successStatus);
       }
       else {
           return response()->json(['error' => 'Unauthorised'], 401);
       }
 
+    }
+
+    public function details() {
+      $user = Auth::user();
+      return response()->json(['success' => $user], $this->successStatus);
     }
 
 }

@@ -19,12 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 
-/*
-Route::prefix('api')->group( function () {
-  // admin login
-  Route::post('/admin/login', 'Auth\AdminLoginController@login');
-} );
-*/
 
 Route::post('/admin/login', 'Auth\AdminLoginController@login')->name('admin.login.api');
 Route::post('/login', 'Auth\UserLoginController@login')->name('user.login.api');
@@ -32,5 +26,6 @@ Route::post('/register', 'Auth\UserRegisterController@register')->name('user.reg
 
 
 Route::group(['middleware' => 'auth:api'], function() {
-  Route::post('details', 'Auth\AdminLoginController@details');
+  Route::get('user-details', 'Auth\UserLoginController@details');
+  Route::get('admin-details', 'Auth\AdminLoginController@details');
 } );

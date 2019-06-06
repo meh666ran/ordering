@@ -13,14 +13,8 @@ class AdminLoginController extends Controller
   public $successStatus = 200;
 
   public function __construct() {
-    $this->middleware('guest');
+    $this->middleware('guest:admin');
   }
-
-    // not important
-    // TODO: get rid of this function
-    public function showLoginForm () {
-      return view("auth.adminlogin");
-    }
 
 
     public function login (Request $request) {
@@ -44,7 +38,7 @@ class AdminLoginController extends Controller
         // attempt to log user in
         if (Auth::guard('admin')->attempt($credentials)) {
           $user = Auth::guard('admin')->user();
-          $success = $user->createToken('ordering')->accessToken;
+          $success = $user->createToken('ordering-admin-token')->accessToken;
           return response()->json(['success' => 'true', 'token' => $success], $this->successStatus);
         }
         else {
@@ -55,7 +49,7 @@ class AdminLoginController extends Controller
     }
 
     public function details() {
-      $user = Auth::guard('admin')->user();
+      $user = Auth::guard('admin-api')->user();
       return response()->json(['success' => $user], $this->successStatus);
     }
 

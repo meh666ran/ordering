@@ -13,7 +13,7 @@ class UserRegisterController extends Controller
   public $successStatus = 200;
 
   public function __construct() {
-    $this->middleware('guest');
+    $this->middleware('guest:user');
   }
 
   public function register(Request $request) {
@@ -30,7 +30,7 @@ class UserRegisterController extends Controller
     $input = $request->all();
     $input['password'] = Hash::make($input['password']);
     $user = User::create($input);
-    $success['token'] = $user->createToken('ordering')->accessToken;
+    $success['token'] = $user->createToken('ordering-user-token')->accessToken;
     $success['name'] = $user->name;
     return response()->json(['success' => $success]);
 
