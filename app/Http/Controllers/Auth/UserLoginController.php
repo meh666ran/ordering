@@ -34,8 +34,8 @@ class UserLoginController extends Controller
 
       if (Auth::attempt($credentials)) {
         $user = Auth::user();
-        $success = $user->createToken('ordering-user-token')->accessToken;
-        return response()->json(['success' => 'true', 'token' => $success], $this->successStatus);
+        $successToken = $user->createToken('ordering-user-token')->accessToken;
+        return response()->json(['success' => $successToken], $this->successStatus);
       }
       else {
           return response()->json(['error' => 'Unauthorised'], 401);

@@ -38,8 +38,8 @@ class AdminLoginController extends Controller
         // attempt to log user in
         if (Auth::guard('admin')->attempt($credentials)) {
           $user = Auth::guard('admin')->user();
-          $success = $user->createToken('ordering-admin-token')->accessToken;
-          return response()->json(['success' => 'true', 'token' => $success], $this->successStatus);
+          $successToken = $user->createToken('ordering-admin-token')->accessToken;
+          return response()->json(['success' => $successToken], $this->successStatus);
         }
         else {
           // if login was unsuccessful
