@@ -21,6 +21,7 @@ class UserRegisterController extends Controller
       'name' => 'required|max:255',
       'phone_number' => 'required',
       'password' => 'required|min:8',
+      'address' => 'nullable',
     ]);
 
     if ($validator->fails()) {
