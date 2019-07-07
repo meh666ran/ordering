@@ -30,4 +30,8 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function cakes() {
+      return $this->hasMany('App\Cake');
+    }
 }
