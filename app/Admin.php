@@ -34,4 +34,8 @@ class Admin extends Authenticatable
     public function cakes() {
       return $this->hasMany('App\Cake');
     }
+
+    public function cakeProperties() {
+      return $this->hasMany('App\CakeProperty');
+    }
 }
