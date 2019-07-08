@@ -19,13 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 
+Route::group(['middleware' => 'auth:api'], function() {
+} );
 
 Route::post('/admin/login', 'Auth\AdminLoginController@login')->name('admin.login.api');
 Route::post('/login', 'Auth\UserLoginController@login')->name('user.login.api');
 Route::post('/register', 'Auth\UserRegisterController@register')->name('user.register.api');
-
-
-Route::group(['middleware' => 'auth:api'], function() {
-  Route::get('user-details', 'Auth\UserLoginController@details');
-  Route::get('admin-details', 'Auth\AdminLoginController@details');
-} );
+Route::get('user-details', 'Auth\UserLoginController@details');
+Route::get('admin-details', 'Auth\AdminLoginController@details');
+Route::post('create/cake', 'CakesController@create');
