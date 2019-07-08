@@ -20,7 +20,7 @@ class CreateCakesTable extends Migration
             $table->string('main_category');
             $table->string('sub_category');
             $table->string('weights');
-            $table->bigInteger('number_of_sells');
+            $table->bigInteger('number_of_sells')->nullable();
             $table->timestamps();
         });
     }
