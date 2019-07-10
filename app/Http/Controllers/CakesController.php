@@ -47,3 +47,25 @@ class CakesController extends Controller
 
     }
 
+    /**
+    * show cake function
+    * shows cakes properties by id
+    * request: GET
+    * @param int
+    * @return Response
+    */
+    public function show($id) {
+      $cake = Cake::find($id);
+
+      if (!$cake) {
+        return response()->json(['error' => 'cake not found'], 404);
+      }
+
+      $values = [
+        'name' => $cake->name,
+        'price' => $cake->price,
+        'weights' => $cake->weights,
+      ];
+      return response()->json($values, 200);
+    }
+
