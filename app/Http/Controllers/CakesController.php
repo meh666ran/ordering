@@ -69,3 +69,46 @@ class CakesController extends Controller
       return response()->json($values, 200);
     }
 
+    /**
+    * show ordered products 10 by each page
+    * shows cakes' name and price per killo
+    * @param string
+    * @return Response
+    */
+    public function productsPage($order) {
+
+      $orderBy = null;
+      $arrange = null;
+
+      if ($order == 'most-sold') {
+        $orderBy = 'number_of_sells';
+        $arrange = 'desc';
+      }
+      else if ($order == 'cheapest') {
+        $orderBy = 'price';
+        $arrange = 'asc';
+      }
+      else if ($order == 'newest') {
+        $orderBy = 'created_at';
+        $arrange = 'desc';
+      }
+      else {
+        return response()->json(['error' => 'order is not valid'], 404);
+      }
+
+      $cakes = Cake::orderBy($orderBy, $arrange)->paginate(10);
+      $cakesResult = array();
+      $counter = 0;
+
+      foreach ($cakes as $cake) {
+        $cakeArr = [
+          'name' => $cake->name,
+          'price' => $cake->price,
+        ];
+
+        $cakesResult += [$counter => $cakeArr];
+        $counter++;
+      }
+      return response()->json($cakesResult, 200);
+    }
+}
