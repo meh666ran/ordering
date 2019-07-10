@@ -30,10 +30,16 @@ class UserRegisterController extends Controller
 
     $input = $request->all();
     $input['password'] = Hash::make($input['password']);
+
     $user = User::create($input);
-    $success['token'] = $user->createToken('ordering-user-token')->accessToken;
-    $success['name'] = $user->name;
-    return response()->json(['success' => $success]);
+
+    $success['status'] = '200';
+    $success['data'] = [
+      'token' => $user->createToken('ordering-user-token')->accessToken,
+      'name' => $user->name,
+    ];
+
+    return response()->json($success, 200);
 
   }
 
