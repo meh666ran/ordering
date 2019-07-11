@@ -23,7 +23,9 @@ class UserLoginController extends Controller
       ]);
 
       if ( $validator->fails() ) {
-          return response()->json(['error' => $validator->errors()], 401);
+          $response['status'] = 401;
+          $response['data'] = ['errors' => $validator->errors()];
+          return response()->json($response, 401);
       }
 
       // user credentials
@@ -35,17 +37,30 @@ class UserLoginController extends Controller
       if (Auth::attempt($credentials)) {
         $user = Auth::user();
         $successToken = $user->createToken('ordering-user-token')->accessToken;
-        return response()->json(['success' => $successToken], $this->successStatus);
+        $response['status'] = 200;
+        $response['data'] = ['token' => $successToken];
+        return response()->json($response, $this->successStatus);
       }
       else {
-          return response()->json(['error' => 'Unauthorised'], 401);
+          $response['status'] = 401;
+          $response['data'] = ['error' => 'Phone Number or Password isn\'t Valid'];
+          return response()->json($response, 401);
       }
 
     }
 
     public function details() {
-      $user = Auth::user();
-      return response()->json(['success' => $user], $this->successStatus);
+      $user = Auth::guard('api')->user();
+      if (!$user){
+        $response['status'] = 401;
+        $response['data'] = ['error' => 'token is not valid'];
+        return response()->json($response, 401);
+      }
+      else {
+        $response['status'] = 200;
+        $response['data'] = $user;
+        return response()->json($response, $this->successStatus);
+      }
     }
 
 }
