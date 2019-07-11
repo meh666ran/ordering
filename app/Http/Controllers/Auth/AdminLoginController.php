@@ -26,7 +26,9 @@ class AdminLoginController extends Controller
       ]);
 
       if ($validator->fails()) {
-        return response()->json(['error' => $validator->errors()], 401);
+        $response['status'] = 401;
+        $response['data'] = ['error' => $validator->errors()];
+        return response()->json($response, 401);
       }
 
         // user credentials
@@ -38,19 +40,25 @@ class AdminLoginController extends Controller
         // attempt to log user in
         if (Auth::guard('admin')->attempt($credentials)) {
           $user = Auth::guard('admin')->user();
+          $success['status'] = 200;
           $successToken = $user->createToken('ordering-admin-token')->accessToken;
-          return response()->json(['success' => $successToken], $this->successStatus);
+          $success['data'] = ['token' => $successToken];
+          return response()->json($success, $this->successStatus);
         }
         else {
           // if login was unsuccessful
-          return response()->json( ['error' => 'Unauthorised'], 401 );
+          $response['status'] = 401;
+          $response['data'] = ['error' => 'email or password is invalid'];
+          return response()->json( $response, 401 );
         }
 
     }
 
     public function details() {
       $user = Auth::guard('admin-api')->user();
-      return response()->json(['success' => $user], $this->successStatus);
+      $response['status'] = 200;
+      $response['data'] = $user;
+      return response()->json($response, $this->successStatus);
     }
 
 
