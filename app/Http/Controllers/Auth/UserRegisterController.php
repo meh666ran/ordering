@@ -25,7 +25,9 @@ class UserRegisterController extends Controller
     ]);
 
     if ($validator->fails()) {
-        return response()->json(['error' => $validator->errors()], 401);
+        $response['status'] = 401;
+        $response['data'] = ['errors' => $validator->errors()];
+        return response()->json($response, 401);
     }
 
     $input = $request->all();
@@ -33,13 +35,13 @@ class UserRegisterController extends Controller
 
     $user = User::create($input);
 
-    $success['status'] = '200';
-    $success['data'] = [
+    $response['status'] = '200';
+    $response['data'] = [
       'token' => $user->createToken('ordering-user-token')->accessToken,
       'name' => $user->name,
     ];
 
-    return response()->json($success, 200);
+    return response()->json($response, 200);
 
   }
 
