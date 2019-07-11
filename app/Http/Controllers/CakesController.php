@@ -29,7 +29,9 @@ class CakesController extends Controller
       ]);
 
       if ($validator->fails()) {
-        return response()->json(['error' => $validator->errors()], 401);
+        $response['status'] = 401;
+        $response['data'] = ['errors' => $validator->errors()];
+        return response()->json($response, 401);
       }
 
       $newCake = new Cake;
@@ -41,9 +43,8 @@ class CakesController extends Controller
       $newCake->admin_id = Auth::guard('admin-api')->user()->id;
       $newCake->save();
 
-
-      $success['status'] = 'done';
-      return response()->json(['success' => $success], 200);
+      $response['status'] = 200;
+      return response()->json($response, 200);
 
     }
 
@@ -58,7 +59,9 @@ class CakesController extends Controller
       $cake = Cake::find($id);
 
       if (!$cake) {
-        return response()->json(['error' => 'cake not found'], 404);
+        $response['status'] = 404;
+        $response['data'] = ['error' =>'Cake Not Found'];
+        return response()->json($response, 404);
       }
 
       $values = [
@@ -66,7 +69,9 @@ class CakesController extends Controller
         'price' => $cake->price,
         'weights' => $cake->weights,
       ];
-      return response()->json($values, 200);
+      $response['status'] = 200;
+      $response['data'] = $values;
+      return response()->json($response, 200);
     }
 
     /**
@@ -93,7 +98,9 @@ class CakesController extends Controller
         $arrange = 'desc';
       }
       else {
-        return response()->json(['error' => 'order is not valid'], 404);
+        $response['status'] = 404;
+        $response['data'] = ['error' => 'Order is not Valid'];
+        return response()->json($response, 404);
       }
 
       $cakes = Cake::orderBy($orderBy, $arrange)->paginate(10);
@@ -102,13 +109,16 @@ class CakesController extends Controller
 
       foreach ($cakes as $cake) {
         $cakeArr = [
+          'id' => $cake->id,
           'name' => $cake->name,
           'price' => $cake->price,
         ];
 
+        $result['status'] = 200;
         $cakesResult += [$counter => $cakeArr];
+        $result['data'] = $cakesResult;
         $counter++;
       }
-      return response()->json($cakesResult, 200);
+      return response()->json($result, 200);
     }
 }
