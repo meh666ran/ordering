@@ -75,6 +75,33 @@ class CakesController extends Controller
     }
 
     /**
+    * create response arrays to show in products page
+    * @param object
+    * @return array
+    */
+    public function createProductsPageArray($cakes) {
+      $lastPage = $cakes->lastPage();
+      $cakesResult = array();
+      $counter = 0;
+
+      foreach($cakes as $cake) {
+        $cakeArr = [
+          'id' => $cake->id,
+          'name' => $cake->name,
+          'price' => $cake->price,
+        ];
+
+        $cakesResult += [$counter => $cakeArr];
+        $counter++;
+      }
+
+      $response['status'] = 200;
+      $response['data'] = $cakesResult + ['last_page' => $lastPage];
+
+      return $response;
+    }
+
+    /**
     * show ordered products 10 by each page
     * shows cakes' name and price per killo
     * @param string
