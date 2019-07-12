@@ -112,6 +112,7 @@ class CakesController extends Controller
       $orderBy = null;
       $arrange = null;
 
+      // TODO: Change to switch case
       if ($order == 'most-sold') {
         $orderBy = 'number_of_sells';
         $arrange = 'desc';
@@ -131,21 +132,24 @@ class CakesController extends Controller
       }
 
       $cakes = Cake::orderBy($orderBy, $arrange)->paginate(10);
-      $cakesResult = array();
-      $counter = 0;
-
-      foreach ($cakes as $cake) {
-        $cakeArr = [
-          'id' => $cake->id,
-          'name' => $cake->name,
-          'price' => $cake->price,
-        ];
-
-        $result['status'] = 200;
-        $cakesResult += [$counter => $cakeArr];
-        $result['data'] = $cakesResult;
-        $counter++;
-      }
-      return response()->json($result, 200);
+      $response = $this->createProductsPageArray($cakes);
+      return response()->json($response, 200);
     }
+
+    /**
+    * show cakes by category
+    * show cakes name and price per killo and id
+    * @param string
+    * @return response
+    */
+    public function showByCategory($category){
+      $cakes = Cake::where('main_category', $category)
+        ->orWhere('sub_category', $category)
+        ->paginate(10);
+
+        $response = $this->createProductsPageArray($cakes);
+        return response()->json($response, 200);
+
+    }
+
 }
