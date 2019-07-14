@@ -30,10 +30,18 @@ class AccessoriesController extends Controller
       return response()->json($response, 401);
     }
 
+    $admin = Auth::guard('admin-api')->user();
+    if(!$admin){
+      $response['status'] = 401;
+      $response['data'] = ['error' => 'Admin Token is Invalid'];
+      return response()->json($response, 401);
+    }
+
     $newAccessory = new Accessory;
     $newAccessory->title = $request->title;
     $newAccessory->price = $request->price;
     $newAccessory->category = $request->category;
+    $newAccessory->admin_id = $admin->id;
     $newAccessory->save();
 
     $response['status'] = 200;
