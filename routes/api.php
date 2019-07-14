@@ -27,4 +27,5 @@ Route::group(['middleware' => 'cors'], function() {
   Route::post('/create/accessory/', 'AccessoriesController@create');
   Route::get('/accessories', 'AccessoriesController@showAll');
   Route::get('/accessories/{id}', 'AccessoriesController@show');
+  Route::post('/submit/order', 'OrdersController@create');
 });
