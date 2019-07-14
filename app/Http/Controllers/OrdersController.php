@@ -14,7 +14,7 @@ class OrdersController extends Controller
      * create an order
      * save order's information into database
      * @param Request
-     * @return Response 
+     * @return Response
     */
     public function create(Request $request) {
       $validator = Validator::make($request->all(), [
@@ -44,7 +44,6 @@ class OrdersController extends Controller
       }
       $request['title'] = $cake->name;
 
-
       $order = new Order;
       $order->title = $request->title;
       $order->cake_id = $request->cake_id;
@@ -55,6 +54,18 @@ class OrdersController extends Controller
       $order->description = $request->description;
       $order->save();
 
+      $this->incNumberOfSells($request->cake_id);
+
       return response()->json(['status' => '200'], 200);
+    }
+
+    /**
+     * increase number of selles field of cake ordered
+     * @param int
+    */
+    public function incNumberOfSells($id) {
+      $cake = Cake::find($id);
+      $cake->number_of_sells += 1;
+      $cake->save();
     }
 }
