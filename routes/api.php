@@ -22,6 +22,9 @@ Route::group(['middleware' => 'cors'], function() {
   Route::get('/admin-details', 'Auth\AdminLoginController@details');
   Route::post('/create/cake', 'CakesController@create');
   Route::get('/cake/{id}', 'CakesController@show');
-  // Route::get('/cakes', 'CakesController@productsPage');
-  Route::get('/cakes/{order}', 'CakesController@productsPage');
+  Route::get('/cakes/order/{order}', 'CakesController@productsPage');
+  Route::get('/cakes/category/{category}', 'CakesController@showByCategory');
+  Route::post('/create/accessory/', 'AccessoriesController@create');
+  Route::get('/accessories', 'AccessoriesController@showAll');
+  Route::get('/accessories/{id}', 'AccessoriesController@show');
 });
