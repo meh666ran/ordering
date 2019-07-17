@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Order;
 use Validator;
 use App\Cake;
@@ -17,6 +18,14 @@ class OrdersController extends Controller
      * @return Response
     */
     public function create(Request $request) {
+      $user = Auth::guard('api')->user();
+      if(!$user){
+        $response['status'] = 401;
+        $response['data'] = ['error' => 'User Token is not valid!'];
+        return response()->json($response, 401);
+      }
+      $userID = $user->id;
+
       $validator = Validator::make($request->all(), [
         'title' => 'nullable',
         'cake_id' => 'required|Integer',
@@ -52,6 +61,7 @@ class OrdersController extends Controller
       $order->send_date_time = $request->send_date_time;
       $order->text_on_cake = $request->text_on_cake;
       $order->description = $request->description;
+      $order->user_id = $userID;
       $order->save();
 
       $this->incNumberOfSells($request->cake_id);
