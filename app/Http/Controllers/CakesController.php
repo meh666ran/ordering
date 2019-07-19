@@ -9,7 +9,6 @@ use App\Cake;
 
 class CakesController extends Controller
 {
-
   /**
   * create cake function
   * add cake's feilds to Database
@@ -33,12 +32,24 @@ class CakesController extends Controller
         'sub_category' => 'required',
         'weights' => 'required',
         'number_of_sells' => 'nullable',
+        'cake_image' => 'image|nullable|max:1999',
       ]);
 
       if ($validator->fails()) {
         $response['status'] = 401;
         $response['data'] = ['errors' => $validator->errors()];
         return response()->json($response, 401);
+      }
+
+      if (!$request->hasFile('cake_image')){
+        $cakeImage = 'noimage.jpg';
+      }
+      else {
+        $fileNameWithExt = $request->file('cake_image')->getClientOriginalName();
+        $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('cake_image')->getClientOriginalExtension();
+        $cakeImage = $fileName . '_' . time() . '.' . $extension;
+        $path = $request->file('cake_image')->storeAs('public/cake_images', $cakeImage);
       }
 
       $newCake = new Cake;
@@ -48,6 +59,7 @@ class CakesController extends Controller
       $newCake->sub_category = $request->sub_category;
       $newCake->weights = $request->weights;
       $newCake->admin_id = $admin->id;
+      $newCake->cake_image = $cakeImage;
       $newCake->save();
 
       $response['status'] = 200;
