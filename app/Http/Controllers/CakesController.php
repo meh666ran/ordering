@@ -159,4 +159,60 @@ class CakesController extends Controller
 
     }
 
+    /**
+      * edit cake's fields by given id
+      * Request: PUT
+      * @param Request
+      * @param int
+      * @return Response
+    */
+    public function update(Request $request, $id){
+      $cake = Cake::find($id);
+      if (!$cake){
+        $response['status'] = 404;
+        $response['data'] = ['error' => 'cake not found!'];
+        return response()->json($response, 404);
+      }
+
+      // TODO: change this to switch case
+      if (!$request->input('title')){
+
+      }
+      else {
+        $cake->name = $request->input('title');
+      }
+
+      if (!$request->input('price')){
+
+      }
+      else {
+        $cake->price = $request->input('price');
+      }
+
+      if (!$request->input('main_category')){
+
+      }
+      else {
+        $cake->main_category = $request->input('main_category');
+      }
+
+      if (!$request->input('sub_category')){
+
+      }
+      else {
+        $cake->sub_category = $request->input('sub_category');
+      }
+
+      if (!$request->input('weights')){
+
+      }
+      else {
+        $cake->weights = $request->input('weights');
+      }
+
+      $cake->save();
+      $response['status'] = 200;
+      return response()->json($response, 200);
+
+    }
 }
