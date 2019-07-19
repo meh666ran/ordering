@@ -19,6 +19,13 @@ class CakesController extends Controller
   */
     public function create(Request $request) {
 
+      $admin = Auth::guard('admin-api')->user();
+      if(!$admin){
+        $response['status'] = 401;
+        $response['data'] = ['error' => 'admin token is not valid'];
+        return response()->json($response, 401);
+      }
+
       $validator = Validator::make($request->all(), [
         'title' => 'required',
         'price' => 'required',
@@ -40,7 +47,7 @@ class CakesController extends Controller
       $newCake->main_category = $request->main_category;
       $newCake->sub_category = $request->sub_category;
       $newCake->weights = $request->weights;
-      $newCake->admin_id = Auth::guard('admin-api')->user()->id;
+      $newCake->admin_id = $admin->id;
       $newCake->save();
 
       $response['status'] = 200;
