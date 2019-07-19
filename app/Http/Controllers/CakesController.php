@@ -215,4 +215,23 @@ class CakesController extends Controller
       return response()->json($response, 200);
 
     }
+
+    /**
+      * delete cake by giving id
+      * Request = DELETE
+      * @param int
+      * @return Response
+    */
+    public function destroy($id) {
+      if ( $cake = Cake::find($id) ) {
+        $cake->delete();
+        $response['status'] = 200;
+        return response()->json($response, 200);
+      }
+      else {
+        $response['status'] = 404;
+        return response()->json($response, 404);
+      }
+    }
+
 }
