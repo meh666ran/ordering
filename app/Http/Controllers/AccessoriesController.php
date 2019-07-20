@@ -100,4 +100,35 @@ class AccessoriesController extends Controller
 
     return response()->json($response, 200);
   }
+
+  /**
+    * edit accessory's fields by given id
+    * Request: PUT
+    * @param Request
+    * @param int
+    * @return Response
+  */
+  public function update(Request $request, $id) {
+
+    // check if admin's token is valid
+    if (!$admin = Auth::guard('admin-api')->user()) {
+      $response['status'] = 401;
+      $response['data'] = ['error' => 'token is not valid'];
+      return response()->json($response, 401);
+    }
+
+    // check if accessory's exist
+    if ( !$accessory = Accessory::find($id) ) {
+      $response['status'] = 404;
+      $response['data'] = ['error' => 'cake not found'];
+      return response()->json($response, 404);
+    }
+
+    $request = $request->toArray();
+    $request['admin_id'] = $admin->id;
+    $accessory->update($request);
+    $response['status'] = 200;
+    return response()->json($response, 200);
+  }
+
 }
