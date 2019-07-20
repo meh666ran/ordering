@@ -131,4 +131,29 @@ class AccessoriesController extends Controller
     return response()->json($response, 200);
   }
 
+  /**
+    * delete accessory by giving id
+    * Request = DELETE
+    * @param int
+    * @return Response
+  */
+  public function destroy($id) {
+    // check if admin's token is valid
+    if ( !$admin = Auth::guard('admin-api')->user() ) {
+      $response['status'] = 401;
+      $response['data'] = ['error' => 'token is not valid'];
+      return response()->json($response, 401);
+    }
+
+    // check if accessory is exist
+    if ( !$accessory = Accessory::find($id) ) {
+      $response['status'] = 404;
+      $response['data'] = ['error' => 'accessory not found'];
+      return response()->json($response, 404);
+    }
+
+    $accessory->delete();
+    $response['status'] = 200;
+    return response()->json($response, 200);
+  }
 }
