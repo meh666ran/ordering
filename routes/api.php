@@ -37,6 +37,8 @@ Route::group(['middleware' => 'cors'], function() {
     Route::post('/create/accessory/', 'AccessoriesController@create');
     Route::get('/accessories', 'AccessoriesController@showAll');
     Route::get('/accessories/{id}', 'AccessoriesController@show');
+    Route::put('/update/accessory/{id}', 'AccessoriesController@update');
+    Route::delete('/delete/accessory/{id}', 'AccessoriesController@destroy');
   });
 
   Route::post('/submit/order', 'OrdersController@create');
