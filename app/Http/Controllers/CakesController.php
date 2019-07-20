@@ -87,6 +87,7 @@ class CakesController extends Controller
         'name' => $cake->name,
         'price' => $cake->price,
         'weights' => $cake->weights,
+        'image' => asset('/storage/cake_images/' . $cake->cake_image),
       ];
       $response['status'] = 200;
       $response['data'] = $values;
