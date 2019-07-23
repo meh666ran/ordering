@@ -115,6 +115,7 @@ class CakesController extends Controller
           'id' => $cake->id,
           'name' => $cake->name,
           'price' => $cake->price,
+          'image' => asset('/storage/cake_images/' . $cake->cake_image),
         ];
 
         $cakesResult += [$counter => $cakeArr];
@@ -200,10 +201,47 @@ class CakesController extends Controller
       }
 
       $request = $request->toArray();
-      if ( isset($request['name']) ) { $request['name'] = $request['title']; }
-
+      if ( isset($request['title']) ) { $request['name'] = $request['title']; }
       unset($request['title']);
       $cake->update($request);
+      $response['status'] = 200;
+      return response()->json($response, 200);
+
+    }
+
+    /**
+      * update cake's image
+      * Request: POST
+      * @param Request
+      * @param int
+      * @return Response
+    */
+    public function updateImage(Request $request, $id) {
+      $cake = Cake::find($id);
+      $admin = Auth::guard('admin-api')->user();
+
+      if (!$admin) {
+        $response['status'] = 401;
+        $response['data'] = ['error' => 'token is not valid'];
+        return response()->json($response, 401);
+      }
+
+      if (!$cake){
+        $response['status'] = 404;
+        $response['data'] = ['error' => 'cake not found!'];
+        return response()->json($response, 404);
+      }
+
+      if ($request->hasFile('cake_image')){
+        $fileNameWithExt = $request->file('cake_image')->getClientOriginalName();
+        $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('cake_image')->getClientOriginalExtension();
+        $cakeImage = $fileName . '_' . time() . '.' . $extension;
+        $path = $request->file('cake_image')->storeAs('public/cake_images', $cakeImage);
+      }
+
+      $cake->cake_image = $cakeImage;
+      $cake->save();
       $response['status'] = 200;
       return response()->json($response, 200);
 
