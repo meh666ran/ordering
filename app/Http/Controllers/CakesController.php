@@ -30,7 +30,7 @@ class CakesController extends Controller
         'price' => 'required',
         'main_category' => 'required',
         'sub_category' => 'required',
-        'weights' => 'required',
+        'weights' => 'required|array',
         'number_of_sells' => 'nullable',
         'cake_image' => 'image|nullable|max:1999',
       ]);
@@ -83,12 +83,18 @@ class CakesController extends Controller
         return response()->json($response, 404);
       }
 
+      $weights = $cake->weights;
+      for ($index = count($cake->weights); $index < 9; $index++) {
+        $weights[$index] = Null;
+      }
+
       $values = [
         'name' => $cake->name,
         'price' => $cake->price,
-        'weights' => $cake->weights,
+        'weights' => $weights,
         'image' => asset('/storage/cake_images/' . $cake->cake_image),
       ];
+
       $response['status'] = 200;
       $response['data'] = $values;
       return response()->json($response, 200);
@@ -181,6 +187,12 @@ class CakesController extends Controller
     */
     public function update(Request $request, $id){
       $cake = Cake::find($id);
+      $admin = Auth::guard('admin-api')->user;
+      if(!$admin){
+        $response['status'] = 401;
+        $response['data'] = ['error' => 'token is not valid'];
+        return response()->json($response, 401)
+      }
       if (!$cake){
         $response['status'] = 404;
         $response['data'] = ['error' => 'cake not found!'];
@@ -236,6 +248,11 @@ class CakesController extends Controller
       * @return Response
     */
     public function destroy($id) {
+      if ( !$admin = Auth::guard('admin-api')->user ){
+        $response['status'] = 401;
+        $response['data'] = ['error' => 'admin token is not valid'];
+        return response()->json($response, 404);
+      }
       if ( $cake = Cake::find($id) ) {
         $cake->delete();
         $response['status'] = 200;
