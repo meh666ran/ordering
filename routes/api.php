@@ -31,6 +31,8 @@ Route::group(['middleware' => 'cors'], function() {
     Route::get('/cakes/category/{category}', 'CakesController@showByCategory');
     Route::put('/update/cake/{id}', 'CakesController@update');
     Route::delete('/delete/cake/{id}', 'CakesController@destroy');
+
+    Route::post('/update/cake/{id}/image', 'CakesController@updateImage');
   });
 
   Route::group(['name' => 'accessories'], function() {
