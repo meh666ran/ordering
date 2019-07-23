@@ -19,7 +19,7 @@ class CreateCakesTable extends Migration
             $table->string('price');
             $table->string('main_category');
             $table->string('sub_category');
-            $table->string('weights');
+            $table->json('weights');
             $table->bigInteger('number_of_sells')->nullable();
             $table->timestamps();
         });
