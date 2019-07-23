@@ -11,10 +11,10 @@ class Cake extends Model
     }
 
     protected $fillable = [
-        'name', 'price', 'main_category', 'sub_category', 'weights',
+        'name', 'price', 'main_category', 'sub_category', 'weights', 'cake_image',
     ];
 
     protected $casts = [
-      'weights' => 'array', 
+      'weights' => 'array',
     ];
 }
