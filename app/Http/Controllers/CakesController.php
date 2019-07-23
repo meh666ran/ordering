@@ -187,11 +187,11 @@ class CakesController extends Controller
     */
     public function update(Request $request, $id){
       $cake = Cake::find($id);
-      $admin = Auth::guard('admin-api')->user;
+      $admin = Auth::guard('admin-api')->user();
       if(!$admin){
         $response['status'] = 401;
         $response['data'] = ['error' => 'token is not valid'];
-        return response()->json($response, 401)
+        return response()->json($response, 401);
       }
       if (!$cake){
         $response['status'] = 404;
@@ -199,43 +199,11 @@ class CakesController extends Controller
         return response()->json($response, 404);
       }
 
-      // TODO: change this to switch case
-      if (!$request->input('title')){
+      $request = $request->toArray();
+      if ( isset($request['name']) ) { $request['name'] = $request['title']; }
 
-      }
-      else {
-        $cake->name = $request->input('title');
-      }
-
-      if (!$request->input('price')){
-
-      }
-      else {
-        $cake->price = $request->input('price');
-      }
-
-      if (!$request->input('main_category')){
-
-      }
-      else {
-        $cake->main_category = $request->input('main_category');
-      }
-
-      if (!$request->input('sub_category')){
-
-      }
-      else {
-        $cake->sub_category = $request->input('sub_category');
-      }
-
-      if (!$request->input('weights')){
-
-      }
-      else {
-        $cake->weights = $request->input('weights');
-      }
-
-      $cake->save();
+      unset($request['title']);
+      $cake->update($request);
       $response['status'] = 200;
       return response()->json($response, 200);
 
@@ -248,7 +216,7 @@ class CakesController extends Controller
       * @return Response
     */
     public function destroy($id) {
-      if ( !$admin = Auth::guard('admin-api')->user ){
+      if ( !$admin = Auth::guard('admin-api')->user() ){
         $response['status'] = 401;
         $response['data'] = ['error' => 'admin token is not valid'];
         return response()->json($response, 404);
